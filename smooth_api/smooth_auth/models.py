@@ -56,6 +56,7 @@ class SmoothUser(AbstractBaseUser, PermissionsMixin):
         default=False
     )
 
+    # jobs = models.ForeignKey()
     jobs = None
 
     USERNAME_FIELD = 'email'
@@ -175,3 +176,15 @@ class ApplicantProfile(models.Model):
 
     class Meta:
         verbose_name = 'Applicant Profile'
+
+
+class SmoothSession(models.Model):
+    user = models.OneToOneField(
+        SmoothUser,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
+
+    token = models.CharField(
+        max_length=64,
+    )

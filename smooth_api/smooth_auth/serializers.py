@@ -1,8 +1,9 @@
 from django.contrib.auth import get_user_model, authenticate
-from rest_framework import serializers
+from rest_framework import serializers, exceptions
 from rest_framework.exceptions import ValidationError
 
 from smooth_api.main.models import Job
+from smooth_api.smooth_auth.models import SmoothSession
 
 UserModel = get_user_model()
 

@@ -5,10 +5,11 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.views import View
 
 from knox.models import AuthToken
 
-from rest_framework import viewsets, response, status
+from rest_framework import viewsets, status, exceptions
 from rest_framework.generics import ListAPIView, RetrieveAPIView, GenericAPIView
 from rest_framework.response import Response
 from smooth_api.smooth_auth.models import SmoothSession
@@ -55,6 +56,12 @@ def make_live_session(user):
     return token
 
 
+def is_logged(user):
+    session = SmoothSession.objects.filter(user=user).first()
+    if session:
+        return session.token
+
+
 class RegisterView(GenericAPIView):
     serializer_class = RegisterSerializer
 
@@ -67,11 +74,11 @@ class RegisterView(GenericAPIView):
             token = make_live_session(user)
 
             return Response({
-                "user": SmoothUserSerializer(user, context=self.get_serializer_context()).data,
-                "token": token
+                'user': SmoothUserSerializer(user, context=self.get_serializer_context()).data,
+                'token': token
             })
 
-        return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginView(GenericAPIView):
@@ -83,11 +90,35 @@ class LoginView(GenericAPIView):
         if serializer.is_valid():
             user = serializer.validated_data
 
-            token = make_live_session(user)
+            token = is_logged(user)
+            if not token:
+                token = make_live_session(user)
 
             return Response({
-                "user": SmoothUserSerializer(user, context=self.get_serializer_context()).data,
-                "token": token
+                'user': SmoothUserSerializer(user, context=self.get_serializer_context()).data,
+                'token': token
             })
 
-        return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({
+            'message': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LogoutView(GenericAPIView):
+
+    def post(self, request):
+
+        key = request.query_params.get('AUTH_TOKEN')
+
+        try:
+            session = SmoothSession.objects.get(
+                token=key
+            )
+
+            session.delete()
+        except:
+            raise exceptions.AuthenticationFailed('Not Authorized!')
+
+        return Response({
+            'message': 'Successfully logged out!'
+        })

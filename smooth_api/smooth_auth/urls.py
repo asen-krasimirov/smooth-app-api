@@ -14,6 +14,7 @@ urlpatterns = [
     path('users/<int:pk>/', views.UserDetail.as_view()),
     path('register/', views.RegisterView.as_view(), name='register'),
     path('login/', views.LoginView.as_view(), name='login'),
+    path('logout/', views.LogoutView.as_view(), name='logout'),
 
     # path('login/', views.LoginView.as_view()),
     # path('logout/', knox_views.LogoutView.as_view()),

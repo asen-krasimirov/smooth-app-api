@@ -1,3 +1,5 @@
+import datetime
+
 from cloudinary import models as cloudinary_models
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
@@ -188,3 +190,14 @@ class SmoothSession(models.Model):
     token = models.CharField(
         max_length=64,
     )
+
+    set_data = models.DateTimeField(
+        default=datetime.datetime.now()
+    )
+
+    expiry_data = models.DateTimeField(
+        default=datetime.datetime.now()
+    )
+
+    def has_expired(self):
+        return datetime.datetime.now(self.expiry_data.tzinfo) > self.expiry_data

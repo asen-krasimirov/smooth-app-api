@@ -1,6 +1,7 @@
 # from django.contrib.auth.models import User, Group
 # from rest_framework import permissions
 # from tutorial.quickstart.serializers import UserSerializer, GroupSerializer
+import datetime
 
 from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
@@ -48,9 +49,12 @@ class UserDetail(RetrieveAPIView):
 def make_live_session(user):
     token = generate_token(64)
 
+    expiry_date = datetime.datetime.now() + datetime.timedelta(days=7)
+
     SmoothSession.objects.create(
         user=user,
-        token=token
+        token=token,
+        expiry_data=expiry_date
     )
 
     return token
@@ -58,7 +62,7 @@ def make_live_session(user):
 
 def is_logged(user):
     session = SmoothSession.objects.filter(user=user).first()
-    if session:
+    if session and not session.has_expired():
         return session.token
 
 

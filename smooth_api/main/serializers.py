@@ -55,8 +55,8 @@ from smooth_api.main.models import Job
 
 
 class JobSerializer(serializers.ModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.email')
+    owner_id = serializers.ReadOnlyField(source='owner.pk')
 
     class Meta:
         model = Job
-        fields = ['pk', 'owner', 'title', 'description', 'type', 'status']
+        fields = ['id', 'owner_id', 'title', 'description', 'type', 'status']

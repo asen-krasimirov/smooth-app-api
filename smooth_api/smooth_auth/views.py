@@ -1,13 +1,6 @@
-# from django.contrib.auth.models import User, Group
-# from rest_framework import permissions
-# from tutorial.quickstart.serializers import UserSerializer, GroupSerializer
 import datetime
 
 from django.contrib.auth import get_user_model
-from django.shortcuts import redirect
-from django.urls import reverse
-from django.views import View
-
 
 from rest_framework import viewsets, status, exceptions
 from rest_framework.generics import ListAPIView, RetrieveAPIView, GenericAPIView
@@ -17,10 +10,6 @@ from smooth_api.core.tasks import generate_token
 
 from smooth_api.smooth_auth.serializers import RegisterSerializer, LoginSerializer
 from smooth_api.smooth_auth.serializers import SmoothUserSerializer
-
-# , LoginUserSerializer
-
-# RegisterUserSerializer, LoginUserSerializer
 
 UserModel = get_user_model()
 
@@ -82,7 +71,9 @@ class RegisterView(GenericAPIView):
                 'token': token
             })
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({
+            'message': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginView(GenericAPIView):

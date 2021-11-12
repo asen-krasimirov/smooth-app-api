@@ -10,14 +10,14 @@ UserModel = get_user_model()
 
 class SmoothUserSerializer(serializers.ModelSerializer):
 
-    jobs = serializers.PrimaryKeyRelatedField(
-        many=True,
-        queryset=Job.objects.all(),
-    )
+    # jobs = serializers.PrimaryKeyRelatedField(
+    #     many=True,
+    #     queryset=Job.objects.all(),
+    # )
 
     class Meta:
         model = UserModel
-        fields = ['id', 'email', 'is_business', 'jobs']
+        fields = ['id', 'email', 'is_business']
 
     def create(self, validated_data):
         return UserModel.objects.create(**validated_data)

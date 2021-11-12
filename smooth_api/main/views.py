@@ -8,7 +8,7 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from smooth_api.main.models import Job
 from smooth_api.main.serializers import JobSerializer
-from smooth_api.smooth_auth.models import SmoothSession
+from smooth_api.smooth_auth.models import SmoothSession, SmoothUser
 from smooth_api.smooth_auth.serializers import SmoothUserSerializer
 
 UserModel = get_user_model()
@@ -48,6 +48,30 @@ class GeneralOps:
 class JobList(GeneralOps, ListAPIView):
     queryset = Job.objects.all()
     serializer_class = JobSerializer
+
+    def get(self, request, *args, **kwargs):
+        owner_pk = request.query_params.get('owner_id')
+        if owner_pk:
+            try:
+                queryset = Job.objects.filter(
+                    owner=SmoothUser.objects.get(
+                        pk=owner_pk
+                    )
+                )
+            except:
+                raise ValidationError('User not found!')
+        else:
+            queryset = Job.objects.all()
+
+        # queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     def post(self, request):
         escaped_data = self.get_and_escape_data(request)

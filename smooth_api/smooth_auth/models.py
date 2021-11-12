@@ -59,7 +59,7 @@ class SmoothUser(AbstractBaseUser, PermissionsMixin):
     )
 
     # jobs = models.ForeignKey()
-    jobs = None
+    # jobs = None
 
     USERNAME_FIELD = 'email'
 

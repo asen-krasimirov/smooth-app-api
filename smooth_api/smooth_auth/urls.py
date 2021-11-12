@@ -1,7 +1,5 @@
 from django.urls import path
 
-from knox import views as knox_views
-
 from smooth_api.smooth_auth import views
 from rest_framework.routers import DefaultRouter
 

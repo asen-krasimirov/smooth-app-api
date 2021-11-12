@@ -7,12 +7,12 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.views import View
 
-from knox.models import AuthToken
 
 from rest_framework import viewsets, status, exceptions
 from rest_framework.generics import ListAPIView, RetrieveAPIView, GenericAPIView
 from rest_framework.response import Response
 from smooth_api.smooth_auth.models import SmoothSession
+from smooth_api.core.tasks import generate_token
 
 from smooth_api.smooth_auth.serializers import RegisterSerializer, LoginSerializer
 from smooth_api.smooth_auth.serializers import SmoothUserSerializer
@@ -46,7 +46,7 @@ class UserDetail(RetrieveAPIView):
 
 
 def make_live_session(user):
-    token = AuthToken.objects.create(user)[1]
+    token = generate_token(64)
 
     SmoothSession.objects.create(
         user=user,

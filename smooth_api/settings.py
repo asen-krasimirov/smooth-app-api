@@ -28,8 +28,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
-    "rest_framework.authtoken",
-    'knox',
+    # "rest_framework.authtoken",
+    # 'knox',
 
     'smooth_api.main',
     'smooth_api.smooth_auth'
@@ -130,26 +130,3 @@ cloudinary.config(
     api_secret=os.getenv('cloudinary_api_secret', 'HQq01LEEPKU2ZT_TckBF6XWY5Cw'),
     secure=os.getenv('cloudinary_secure_boolean', True),
 )
-
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework.authentication.BasicAuthentication',
-#         'rest_framework.authentication.SessionAuthentication',
-#         'knox.auth.TokenAuthentication',
-#     )
-# }
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
-        # 'rest_framework.authentication.TokenAuthentication',
-        # 'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-        # 'knox.auth.TokenAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        # 'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-        # 'rest_framework.permissions.IsAuthenticated',
-        # 'rest_framework.permissions.AllowAny'
-    ]
-}

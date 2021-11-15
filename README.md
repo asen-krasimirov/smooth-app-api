@@ -85,7 +85,7 @@ URL = /auth/users/
 
 ### User Details (get)
 
-URL = /auth/users/<id>
+URL = /auth/users/{id}
 
 ```json
 /* successful response (example) */
@@ -98,7 +98,7 @@ URL = /auth/users/<id>
 
 ### Profile Details (get)
 
-URL = /auth/profile-details/<use_id>/
+URL = /auth/profile-details/{user_id}/
 
 ```json
 /* successful response (example for Applicant Object) */
@@ -133,7 +133,7 @@ URL = /auth/profile-details/<use_id>/
 
 ### Profile Details Updating (put)
 
-URL = /auth/profile-details/<use_id>/?AUTH_TOKEN={valid_session_token}
+URL = /auth/profile-details/{user_id}/?AUTH_TOKEN={valid_session_token}
 
 ```json
 /* body (for Applicant Object Updates) */
@@ -239,7 +239,7 @@ URL= /jobs/?owner_id={valid_owner_id}
 
 ### Job Details (get)
 
-URL = /jobs/<id>/
+URL = /jobs/{id}/
 
 ```json
 /* successful response (example) */
@@ -255,7 +255,7 @@ URL = /jobs/<id>/
 
 ### Job Details Update (put)
 
-URL = /jobs/<id>/?AUTH_TOKEN={valid_session_token}
+URL = /jobs/{id}/?AUTH_TOKEN={valid_session_token}
 
 ```json
 /* body (example) */

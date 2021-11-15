@@ -72,7 +72,7 @@ WSGI_APPLICATION = 'smooth_api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'smooth',
+        'NAME': 'local_smooth_db',
         'USER': 'postgres',
         'PASSWORD': 'passpost',
         'HOST': '127.0.0.1',

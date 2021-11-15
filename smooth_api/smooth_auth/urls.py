@@ -1,19 +1,18 @@
 from django.urls import path
 
 from smooth_api.smooth_auth import views
-from rest_framework.routers import DefaultRouter
 
-# router = DefaultRouter()
-# router.register(r'users', views.SmoothUserViewSet)
-# urlpatterns = router.urls
+import smooth_api.smooth_auth.signals
+
 
 urlpatterns = [
     path('users/', views.UserList.as_view()),
     path('users/<int:pk>/', views.UserDetail.as_view()),
+
     path('register/', views.RegisterView.as_view(), name='register'),
     path('login/', views.LoginView.as_view(), name='login'),
     path('logout/', views.LogoutView.as_view(), name='logout'),
 
-    # path('login/', views.LoginView.as_view()),
-    # path('logout/', knox_views.LogoutView.as_view()),
+    # path('create-business-profile/<int:owner_id>/', views.BusinessProfileView.as_view()),
+    path('profile-details/<int:user_id>/', views.ProfileDetails.as_view()),
 ]

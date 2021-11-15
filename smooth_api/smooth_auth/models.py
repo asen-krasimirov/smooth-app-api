@@ -1,10 +1,15 @@
 import datetime
 
 from cloudinary import models as cloudinary_models
+
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
+
+
+def get_default_array():
+    return ['']
 
 
 class SmoothUserManager(BaseUserManager):
@@ -41,11 +46,6 @@ class SmoothUserManager(BaseUserManager):
 
 
 class SmoothUser(AbstractBaseUser, PermissionsMixin):
-    """
-    User model that extends the default one.
-    Now the UserModel (user) has to log-in with email and password.
-    """
-
     email = models.EmailField(
         unique=True,
     )
@@ -58,9 +58,6 @@ class SmoothUser(AbstractBaseUser, PermissionsMixin):
         default=False
     )
 
-    # jobs = models.ForeignKey()
-    # jobs = None
-
     USERNAME_FIELD = 'email'
 
     objects = SmoothUserManager()
@@ -71,20 +68,19 @@ class SmoothUser(AbstractBaseUser, PermissionsMixin):
 
 
 class BusinessProfile(models.Model):
-    """
-    This is the profile businesses will use.
-    """
-
     name = models.CharField(
         max_length=60,
+        blank=True,
     )
 
     sub_name = models.CharField(
         max_length=100,
+        blank=True,
     )
 
     about_info = models.CharField(
         max_length=300,
+        blank=True,
     )
 
     icon_image = cloudinary_models.CloudinaryField(
@@ -107,9 +103,9 @@ class BusinessProfile(models.Model):
         primary_key=True,
     )
 
-    is_complete = models.BooleanField(
-        default=False,
-    )
+    # is_complete = models.BooleanField(
+    #     default=False,
+    # )
 
     def __str__(self):
         return f'Profile of {self.user.email}'
@@ -119,20 +115,19 @@ class BusinessProfile(models.Model):
 
 
 class ApplicantProfile(models.Model):
-    """
-    This is the profile job applicants will use.
-    """
-
     first_name = models.CharField(
         max_length=30,
+        blank=True,
     )
 
     last_name = models.CharField(
         max_length=30,
+        blank=True,
     )
 
     about_info = models.CharField(
         max_length=300,
+        blank=True,
     )
 
     icon_image = cloudinary_models.CloudinaryField(
@@ -148,15 +143,19 @@ class ApplicantProfile(models.Model):
     skills = ArrayField(
         models.CharField(
             max_length=100,
+            blank=True,
         ),
-        blank=True,
+        # blank=True,
+        default=get_default_array
     )
 
     education = ArrayField(
         models.CharField(
             max_length=150,
+            blank=True,
         ),
-        blank=True,
+        # blank=True,
+        default=get_default_array
     )
 
     applicant_blog = models.URLField(
@@ -169,9 +168,9 @@ class ApplicantProfile(models.Model):
         primary_key=True,
     )
 
-    is_complete = models.BooleanField(
-        default=False,
-    )
+    # is_complete = models.BooleanField(
+    #     default=False,
+    # )
 
     def __str__(self):
         return f'Profile of {self.user.email}'
@@ -191,9 +190,9 @@ class SmoothSession(models.Model):
         max_length=64,
     )
 
-    set_data = models.DateTimeField(
-        default=datetime.datetime.now()
-    )
+    # set_data = models.DateTimeField(
+    #     default=datetime.datetime.now()
+    # )
 
     expiry_data = models.DateTimeField(
         default=datetime.datetime.now()

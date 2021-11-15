@@ -1,28 +1,22 @@
 import datetime
 
 from django.contrib.auth import get_user_model
-
 from rest_framework import viewsets, status, exceptions
+from rest_framework.exceptions import ValidationError
 from rest_framework.generics import ListAPIView, RetrieveAPIView, GenericAPIView
 from rest_framework.response import Response
-from smooth_api.smooth_auth.models import SmoothSession
 from smooth_api.core.tasks import generate_token
-
-from smooth_api.smooth_auth.serializers import RegisterSerializer, LoginSerializer
+from smooth_api.smooth_auth.models import SmoothSession, SmoothUser, BusinessProfile, ApplicantProfile
+from smooth_api.smooth_auth.serializers import RegisterSerializer, LoginSerializer, BusinessProfileSerializer, \
+    ApplicantProfileSerializer
 from smooth_api.smooth_auth.serializers import SmoothUserSerializer
 
 UserModel = get_user_model()
 
 
 class SmoothUserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-
-    # queryset = User.objects.all().order_by('-date_joined')
     queryset = UserModel.objects.all()
     serializer_class = SmoothUserSerializer
-    # permission_classes = [permissions.IsAuthenticated]
 
 
 class UserList(ListAPIView):
@@ -112,8 +106,113 @@ class LogoutView(GenericAPIView):
 
             session.delete()
         except:
-            raise exceptions.AuthenticationFailed('Not Authorized!')
+            raise exceptions.AuthenticationFailed({'error_message': 'Not Authorized!'})
 
         return Response({
             'message': 'Successfully logged out!'
+        })
+
+
+class ProfileDetails(GenericAPIView):
+    # serializer_class =
+
+    def get(self, request, *args, **kwargs):
+        user_pk = kwargs.get('user_id')
+        try:
+            user = SmoothUser.objects.filter(
+                pk=user_pk
+            ).first()
+
+            if not user:
+                raise ValidationError({'error_message': 'User not found!'})
+
+            if user.is_business:
+                profile = BusinessProfile.objects.get(
+                    pk=user_pk
+                )
+
+                self.serializer_class = BusinessProfileSerializer
+
+                profile = BusinessProfileSerializer(profile, context=self.get_serializer_context()).data,
+
+            else:
+                profile = ApplicantProfile.objects.get(
+                    pk=user_pk
+                )
+
+                self.serializer_class = BusinessProfileSerializer
+
+                profile = ApplicantProfileSerializer(profile, context=self.get_serializer_context()).data,
+
+        except Exception as e:
+            # print(e)
+            raise ValidationError({'error_message': 'Profile not found!'})
+
+        return Response({
+            'profile': profile[0],
+        })
+
+    def put(self, request, *args, **kwargs):
+        token = request.query_params.get('AUTH_TOKEN')
+        user_pk = kwargs.get('user_id')
+        current_user = SmoothSession.objects.filter(
+            token=token,
+        ).first()
+
+        if not current_user:
+            raise ValidationError({'error_message': 'Not Authenticated or Not Authorized!'})
+
+        user = SmoothUser.objects.filter(
+            pk=user_pk
+        ).first()
+
+        if not user:
+            raise ValidationError({'error_message': 'User not found!'})
+
+        if user.pk != current_user.pk:
+            raise ValidationError({'error_message': 'Not Authorized!'})
+
+        try:
+            if user.is_business:
+                profile = BusinessProfile.objects.get(
+                    pk=user_pk
+                )
+
+                self.serializer_class = BusinessProfileSerializer
+                #
+                # profile_serialized = self.serializer_class(data=request.data)
+                # if profile_serialized.is_valid():
+                #     profile_serialized = profile_serialized.update(profile, profile_serialized.validated_data)
+
+                # profile = BusinessProfileSerializer(profile_serialized, context=self.get_serializer_context()).data,
+
+            else:
+                profile = ApplicantProfile.objects.get(
+                    pk=user_pk
+                )
+
+                self.serializer_class = ApplicantProfileSerializer
+
+                # profile_serialized = self.serializer_class(data=request.data)
+                # if profile_serialized.is_valid():
+                #     profile_serialized = profile_serialized.update(profile, profile_serialized.validated_data)
+                # else:
+                #     raise ValidationError({'error_message': 'Put valid data!'})
+                #
+                # profile = ApplicantProfileSerializer(profile_serialized, context=self.get_serializer_context()).data,
+
+            profile_serialized = self.serializer_class(data=request.data)
+            if profile_serialized.is_valid():
+                profile_serialized = profile_serialized.update(profile, profile_serialized.validated_data)
+            else:
+                raise ValidationError({'error_message': 'Put valid data!'})
+
+            profile = self.serializer_class(profile_serialized, context=self.get_serializer_context()).data,
+
+
+        except Exception as e:
+            raise ValidationError(e.args[0])
+
+        return Response({
+            'profile': profile[0],
         })

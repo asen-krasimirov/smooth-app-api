@@ -3,7 +3,7 @@ from importlib._common import _
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth import get_user_model
-# from carrent.carrent_auth.models import CarRentUser, CarRentProfile
+
 from smooth_api.smooth_auth.models import SmoothUser, BusinessProfile, ApplicantProfile, SmoothSession
 
 UserModel = get_user_model()

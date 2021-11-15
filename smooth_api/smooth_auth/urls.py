@@ -13,6 +13,5 @@ urlpatterns = [
     path('login/', views.LoginView.as_view(), name='login'),
     path('logout/', views.LogoutView.as_view(), name='logout'),
 
-    # path('create-business-profile/<int:owner_id>/', views.BusinessProfileView.as_view()),
     path('profile-details/<int:user_id>/', views.ProfileDetails.as_view()),
 ]

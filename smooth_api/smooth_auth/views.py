@@ -14,9 +14,9 @@ from smooth_api.smooth_auth.serializers import SmoothUserSerializer
 UserModel = get_user_model()
 
 
-class SmoothUserViewSet(viewsets.ModelViewSet):
-    queryset = UserModel.objects.all()
-    serializer_class = SmoothUserSerializer
+# class SmoothUserViewSet(viewsets.ModelViewSet):
+#     queryset = UserModel.objects.all()
+#     serializer_class = SmoothUserSerializer
 
 
 class UserList(ListAPIView):
@@ -65,9 +65,7 @@ class RegisterView(GenericAPIView):
                 'token': token
             })
 
-        return Response({
-            'message': serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginView(GenericAPIView):
@@ -88,15 +86,12 @@ class LoginView(GenericAPIView):
                 'token': token
             })
 
-        return Response({
-            'message': serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LogoutView(GenericAPIView):
 
     def post(self, request):
-
         key = request.query_params.get('AUTH_TOKEN')
 
         try:
@@ -114,7 +109,6 @@ class LogoutView(GenericAPIView):
 
 
 class ProfileDetails(GenericAPIView):
-    # serializer_class =
 
     def get(self, request, *args, **kwargs):
         user_pk = kwargs.get('user_id')
@@ -145,12 +139,9 @@ class ProfileDetails(GenericAPIView):
                 profile = ApplicantProfileSerializer(profile, context=self.get_serializer_context()).data,
 
         except Exception as e:
-            # print(e)
             raise ValidationError({'error_message': 'Profile not found!'})
 
-        return Response({
-            'profile': profile[0],
-        })
+        return Response(profile[0])
 
     def put(self, request, *args, **kwargs):
         token = request.query_params.get('AUTH_TOKEN')
@@ -179,12 +170,6 @@ class ProfileDetails(GenericAPIView):
                 )
 
                 self.serializer_class = BusinessProfileSerializer
-                #
-                # profile_serialized = self.serializer_class(data=request.data)
-                # if profile_serialized.is_valid():
-                #     profile_serialized = profile_serialized.update(profile, profile_serialized.validated_data)
-
-                # profile = BusinessProfileSerializer(profile_serialized, context=self.get_serializer_context()).data,
 
             else:
                 profile = ApplicantProfile.objects.get(
@@ -192,14 +177,6 @@ class ProfileDetails(GenericAPIView):
                 )
 
                 self.serializer_class = ApplicantProfileSerializer
-
-                # profile_serialized = self.serializer_class(data=request.data)
-                # if profile_serialized.is_valid():
-                #     profile_serialized = profile_serialized.update(profile, profile_serialized.validated_data)
-                # else:
-                #     raise ValidationError({'error_message': 'Put valid data!'})
-                #
-                # profile = ApplicantProfileSerializer(profile_serialized, context=self.get_serializer_context()).data,
 
             profile_serialized = self.serializer_class(data=request.data)
             if profile_serialized.is_valid():
@@ -209,10 +186,7 @@ class ProfileDetails(GenericAPIView):
 
             profile = self.serializer_class(profile_serialized, context=self.get_serializer_context()).data,
 
-
         except Exception as e:
             raise ValidationError(e.args[0])
 
-        return Response({
-            'profile': profile[0],
-        })
+        return Response(profile[0])

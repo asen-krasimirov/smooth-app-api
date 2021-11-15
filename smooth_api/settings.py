@@ -1,23 +1,15 @@
 import os
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 import cloudinary
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
+SECRET_KEY = os.getenv('SECRET_KEY')
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-grs2e!v($c$=06#m+td*2g*k+gfptsze8z7#7t=&0+9_8wl5v$'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG')
 
 ALLOWED_HOSTS = []
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -28,8 +20,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
-    # "rest_framework.authtoken",
-    # 'knox',
 
     'smooth_api.main',
     'smooth_api.smooth_auth'
@@ -72,16 +62,13 @@ WSGI_APPLICATION = 'smooth_api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'local_smooth_db',
-        'USER': 'postgres',
-        'PASSWORD': 'passpost',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_POST'),
     }
 }
-
-# Password validation
-# https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -98,9 +85,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Internationalization
-# https://docs.djangoproject.com/en/3.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -111,13 +95,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.2/howto/static-files/
-
 STATIC_URL = '/static/'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -125,8 +103,8 @@ AUTH_USER_MODEL = 'smooth_auth.SmoothUser'
 
 # Cloudinary configuration (cloud for images)
 cloudinary.config(
-    cloud_name=os.getenv('cloudinary_cloud_name', 'smooth-image-db'),
-    api_key=os.getenv('cloudinary_api_key', '937185453519869'),
-    api_secret=os.getenv('cloudinary_api_secret', 'HQq01LEEPKU2ZT_TckBF6XWY5Cw'),
-    secure=os.getenv('cloudinary_secure_boolean', True),
+    cloud_name=os.getenv('cloudinary_cloud_name', os.getenv('CLOUDINARY_CLOUD_NAME')),
+    api_key=os.getenv('cloudinary_api_key', os.getenv('CLOUDINARY_API_KEY')),
+    api_secret=os.getenv('cloudinary_api_secret', os.getenv('CLOUDINARY_API_SECRET')),
+    secure=os.getenv('cloudinary_secure_boolean', os.getenv('CLOUDINARY_SECURE')),
 )

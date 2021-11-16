@@ -1,1 +1,1 @@
-web: gunicorn smooth_api.wsgi
+web: gunicorn smooth-app-api.smooth_api.wsgi

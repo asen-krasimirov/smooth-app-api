@@ -1,15 +1,7 @@
 from django.contrib import admin
-# from django.urls import path, include
 
 from django.urls import include, path
-# from rest_framework import routers
-# from tutorial.quickstart import views
-# from smooth_api.smooth_auth import views
 
-
-# router = routers.DefaultRouter()
-# router.register(r'users', views.SmoothUserViewSet)
-# router.register(r'groups', views.GroupViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -21,3 +13,5 @@ urlpatterns = [
 urlpatterns += [
     path('smooth-api-auth/', include('rest_framework.urls')),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)

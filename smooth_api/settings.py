@@ -1,4 +1,5 @@
 import os
+import django_heroku
 from pathlib import Path
 
 import cloudinary
@@ -7,9 +8,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', '1jb61nmlk)+$grbx+=d7k^3h^d%$bz&s$k%098g!zo-ab#d2gn')
 
-DEBUG = os.getenv('DEBUG', True)
+DEBUG = os.getenv('DEBUG', False)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    'https://smooth-app-api.herokuapp.com',
+    'localhost',
+    '127.0.0.1'
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -96,7 +101,7 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = (
     os.path.join(PROJECT_DIR, 'staticfiles'),
 )
@@ -112,3 +117,6 @@ cloudinary.config(
     api_secret=os.getenv('cloudinary_api_secret', os.getenv('CLOUDINARY_API_SECRET', 'HQq01LEEPKU2ZT_TckBF6XWY5Cw')),
     secure=os.getenv('cloudinary_secure_boolean', os.getenv('CLOUDINARY_SECURE', True)),
 )
+
+# Activate Django-Heroku.
+django_heroku.settings(locals())

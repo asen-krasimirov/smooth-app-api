@@ -5,9 +5,9 @@ import cloudinary
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = os.getenv('SECRET_KEY', '1jb61nmlk)+$grbx+=d7k^3h^d%$bz&s$k%098g!zo-ab#d2gn')
 
-DEBUG = os.getenv('DEBUG')
+DEBUG = os.getenv('DEBUG', True)
 
 ALLOWED_HOSTS = []
 
@@ -62,11 +62,11 @@ WSGI_APPLICATION = 'smooth_api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_POST'),
+        'NAME': os.getenv('DB_NAME', 'smooth'),
+        'USER': os.getenv('DB_USER', 'postgres'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'passpost'),
+        'HOST': os.getenv('DB_HOST', '127.0.0.1'),
+        'PORT': os.getenv('DB_POST', '5453'),
     }
 }
 
@@ -103,8 +103,8 @@ AUTH_USER_MODEL = 'smooth_auth.SmoothUser'
 
 # Cloudinary configuration (cloud for images)
 cloudinary.config(
-    cloud_name=os.getenv('cloudinary_cloud_name', os.getenv('CLOUDINARY_CLOUD_NAME')),
-    api_key=os.getenv('cloudinary_api_key', os.getenv('CLOUDINARY_API_KEY')),
-    api_secret=os.getenv('cloudinary_api_secret', os.getenv('CLOUDINARY_API_SECRET')),
-    secure=os.getenv('cloudinary_secure_boolean', os.getenv('CLOUDINARY_SECURE')),
+    cloud_name=os.getenv('cloudinary_cloud_name', os.getenv('CLOUDINARY_CLOUD_NAME', 'smooth-image-db')),
+    api_key=os.getenv('cloudinary_api_key', os.getenv('CLOUDINARY_API_KEY', '937185453519869')),
+    api_secret=os.getenv('cloudinary_api_secret', os.getenv('CLOUDINARY_API_SECRET', 'HQq01LEEPKU2ZT_TckBF6XWY5Cw')),
+    secure=os.getenv('cloudinary_secure_boolean', os.getenv('CLOUDINARY_SECURE', True)),
 )

@@ -27,7 +27,9 @@ INSTALLED_APPS = [
     'rest_framework',
 
     'smooth_api.main',
-    'smooth_api.smooth_auth'
+    'smooth_api.smooth_auth',
+
+    'gunicorn'
 ]
 
 MIDDLEWARE = [

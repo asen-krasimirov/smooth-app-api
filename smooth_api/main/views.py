@@ -107,3 +107,7 @@ class JobDetail(GeneralOps, RetrieveAPIView):
         return Response(
             JobSerializer(job, context=self.get_serializer_context()).data
         )
+
+
+def test_view(request):
+    return HttpResponse(request)

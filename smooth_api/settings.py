@@ -11,9 +11,10 @@ SECRET_KEY = os.getenv('SECRET_KEY', '1jb61nmlk)+$grbx+=d7k^3h^d%$bz&s$k%098g!zo
 DEBUG = os.getenv('DEBUG', False)
 
 ALLOWED_HOSTS = [
-    'https://smooth-app-api.herokuapp.com',
-    'localhost',
-    '127.0.0.1'
+    # 'https://smooth-app-api.herokuapp.com',
+    # 'localhost',
+    # '127.0.0.1'
+    '*'
 ]
 
 INSTALLED_APPS = [

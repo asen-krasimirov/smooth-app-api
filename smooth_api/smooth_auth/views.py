@@ -86,7 +86,7 @@ class LoginView(GenericAPIView):
                 'token': token
             })
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors[0], status=status.HTTP_400_BAD_REQUEST)
 
 
 class LogoutView(GenericAPIView):

@@ -107,6 +107,25 @@ class JobDetail(GeneralOps, RetrieveAPIView):
     queryset = Job.objects.all()
     serializer_class = JobSerializer
 
+    def get(self, request, *args, **kwargs):
+
+        job = Job.objects.get(
+            pk=kwargs['pk']
+        )
+
+        owner_profile = BusinessProfile.objects.get(
+            pk=job.owner.pk
+        )
+
+        serialized_profile = BusinessProfileSerializer(owner_profile)
+
+        serializer = self.get_serializer(job)
+
+        return Response({
+            'job': serializer.data,
+            'profile': serialized_profile.data
+        })
+
     def put(self, request, *args, **kwargs):
         escaped_data = self.get_and_escape_data(request)
         primary_key = kwargs['pk']
@@ -120,10 +139,17 @@ class JobDetail(GeneralOps, RetrieveAPIView):
 
         job.save()
 
+        owner_profile = BusinessProfile.objects.get(
+            pk=job.owner.pk
+        )
+
         return Response(
-            JobSerializer(job, context=self.get_serializer_context()).data
+            {
+                'job': JobSerializer(job, context=self.get_serializer_context()).data,
+                'profile': BusinessProfileSerializer(owner_profile).data
+            }
         )
 
 
-def test_view(request):
-    return HttpResponse(request)
+# def test_view(request):
+#     return HttpResponse(request)

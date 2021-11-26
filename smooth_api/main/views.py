@@ -1,15 +1,14 @@
 import html
 
 from django.contrib.auth import get_user_model
-
 from rest_framework import exceptions
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
-
 from smooth_api.main.models import Job
 from smooth_api.main.serializers import JobSerializer
-from smooth_api.smooth_auth.models import SmoothSession, SmoothUser
+from smooth_api.smooth_auth.models import SmoothSession, SmoothUser, BusinessProfile
+from smooth_api.smooth_auth.serializers import BusinessProfileSerializer
 
 UserModel = get_user_model()
 
@@ -51,6 +50,7 @@ class JobList(GeneralOps, ListAPIView):
 
     def get(self, request, *args, **kwargs):
         owner_pk = request.query_params.get('owner_id')
+        serialized_profiles = []
         if owner_pk:
             try:
                 queryset = Job.objects.filter(
@@ -61,6 +61,19 @@ class JobList(GeneralOps, ListAPIView):
             except:
                 raise ValidationError({'error_message': 'User not found!'})
         else:
+            jobs = Job.objects.all()
+
+            job_owner_ids = [
+                job.owner.pk
+                for job in jobs
+            ]
+
+            owner_profiles = BusinessProfile.objects.filter(
+                pk__in=job_owner_ids
+            )
+
+            serialized_profiles = BusinessProfileSerializer(owner_profiles, many=True)
+
             queryset = Job.objects.all()
 
         page = self.paginate_queryset(queryset)
@@ -69,7 +82,10 @@ class JobList(GeneralOps, ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        return Response({
+            'jobs': serializer.data,
+            'profiles': serialized_profiles.data
+        })
 
     def post(self, request):
         escaped_data = self.get_and_escape_data(request)

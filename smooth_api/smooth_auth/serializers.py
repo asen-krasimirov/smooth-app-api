@@ -130,8 +130,8 @@ class ApplicantProfileSerializer(serializers.ModelSerializer):
         education = validated_data['education']
         applicant_blog = validated_data['applicant_blog']
 
-        instance.name = first_name
-        instance.sub_name = last_name
+        instance.first_name = first_name
+        instance.last_name = last_name
         instance.about_info = about_info
         instance.icon_image = icon_image
         instance.background_image = background_image

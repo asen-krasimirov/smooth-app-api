@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'smooth_api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME', 'smooth'),
+        'NAME': os.getenv('DB_NAME', 'db_smooth'),
         'USER': os.getenv('DB_USER', 'postgres'),
         'PASSWORD': os.getenv('DB_PASSWORD', 'passpost'),
         'HOST': os.getenv('DB_HOST', '127.0.0.1'),
@@ -123,12 +123,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'smooth_auth.SmoothUser'
 
 # Cloudinary configuration (cloud for images)
-cloudinary.config(
-    cloud_name=os.getenv('cloudinary_cloud_name', os.getenv('CLOUDINARY_CLOUD_NAME', 'smooth-image-db')),
-    api_key=os.getenv('cloudinary_api_key', os.getenv('CLOUDINARY_API_KEY', '937185453519869')),
-    api_secret=os.getenv('cloudinary_api_secret', os.getenv('CLOUDINARY_API_SECRET', 'HQq01LEEPKU2ZT_TckBF6XWY5Cw')),
-    secure=os.getenv('cloudinary_secure_boolean', os.getenv('CLOUDINARY_SECURE', True)),
-)
+# cloudinary.config(
+#     cloud_name=os.getenv('cloudinary_cloud_name', os.getenv('CLOUDINARY_CLOUD_NAME', 'smooth-image-db')),
+#     api_key=os.getenv('cloudinary_api_key', os.getenv('CLOUDINARY_API_KEY', '937185453519869')),
+#     api_secret=os.getenv('cloudinary_api_secret', os.getenv('CLOUDINARY_API_SECRET', 'HQq01LEEPKU2ZT_TckBF6XWY5Cw')),
+#     secure=os.getenv('cloudinary_secure_boolean', os.getenv('CLOUDINARY_SECURE', True)),
+# )
 
 # Activate Django-Heroku.
 django_heroku.settings(locals())

@@ -139,7 +139,7 @@ class ProfileDetails(GenericAPIView):
                 profile = ApplicantProfileSerializer(profile, context=self.get_serializer_context()).data,
 
         except Exception as e:
-            raise ValidationError({'error_message': 'Profile not found!'})
+            raise ValidationError({'error_message': e})
 
         return Response(profile[0])
 
@@ -178,7 +178,11 @@ class ProfileDetails(GenericAPIView):
 
                 self.serializer_class = ApplicantProfileSerializer
 
-            profile_serialized = self.serializer_class(data=request.data)
+            data = dict(request.data)
+            data['education'] = data['education'].split(';')
+            data['skills'] = data['skills'].split(';')
+
+            profile_serialized = self.serializer_class(data=data)
             if profile_serialized.is_valid():
                 profile_serialized = profile_serialized.update(profile, profile_serialized.validated_data)
             else:

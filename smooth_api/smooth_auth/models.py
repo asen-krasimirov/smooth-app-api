@@ -1,7 +1,5 @@
 import datetime
 
-from cloudinary import models as cloudinary_models
-
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.postgres.fields import ArrayField
@@ -83,13 +81,21 @@ class BusinessProfile(models.Model):
         blank=True,
     )
 
-    icon_image = cloudinary_models.CloudinaryField(
-        resource_type='image',
+    # icon_image = cloudinary_models.CloudinaryField(
+    #     resource_type='image',
+    #     blank=True,
+    # )
+    #
+    # background_image = cloudinary_models.CloudinaryField(
+    #     resource_type='image',
+    #     blank=True,
+    # )
+
+    icon_image = models.URLField(
         blank=True,
     )
 
-    background_image = cloudinary_models.CloudinaryField(
-        resource_type='image',
+    background_image = models.URLField(
         blank=True,
     )
 
@@ -130,13 +136,21 @@ class ApplicantProfile(models.Model):
         blank=True,
     )
 
-    icon_image = cloudinary_models.CloudinaryField(
-        resource_type='image',
+    # icon_image = cloudinary_models.CloudinaryField(
+    #     resource_type='image',
+    #     blank=True,
+    # )
+    #
+    # background_image = cloudinary_models.CloudinaryField(
+    #     resource_type='image',
+    #     blank=True,
+    # )
+
+    icon_image = models.URLField(
         blank=True,
     )
 
-    background_image = cloudinary_models.CloudinaryField(
-        resource_type='image',
+    background_image = models.URLField(
         blank=True,
     )
 

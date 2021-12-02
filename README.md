@@ -279,7 +279,7 @@ URL = /jobs/{id}/?AUTH_TOKEN={valid_session_token}
 
 ### Job Creation (post)
 
-URL = /Jobs/?AUTH_TOKEN={valid_session_token}
+URL = /jobs/?AUTH_TOKEN={valid_session_token}
 
 ```json
 /* body (example) */

@@ -163,8 +163,10 @@ class ProfileDetails(GenericAPIView):
         if user.pk != current_user.pk:
             raise ValidationError({'error_message': 'Not Authorized!'})
 
+        is_business = user.is_business
+
         try:
-            if user.is_business:
+            if not is_business:
                 profile = BusinessProfile.objects.get(
                     pk=user_pk
                 )
@@ -179,8 +181,9 @@ class ProfileDetails(GenericAPIView):
                 self.serializer_class = ApplicantProfileSerializer
 
             data = dict(request.data)
-            data['education'] = data['education'].split(';')
-            data['skills'] = data['skills'].split(';')
+            if is_business:
+                data['education'] = data['education'].split(';')
+                data['skills'] = data['skills'].split(';')
 
             profile_serialized = self.serializer_class(data=data)
             if profile_serialized.is_valid():

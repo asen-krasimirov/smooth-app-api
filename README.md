@@ -173,7 +173,7 @@ URL = /auth/profile-details/{user_id}/?AUTH_TOKEN={valid_session_token}
 
 /* successful response (for Business Object Updates) */
 {
-	"id": 4,
+  "id": 4,
   "name": "CompanyName",
   "sub_name": "SubName",
   "about_info": "AboutInfo",
@@ -218,7 +218,7 @@ URL= /jobs/?owner_id={valid_owner_id}
 ```json
 /* successful response (example ) */
 [
-	{
+  {
     "id": 2,
     "owner_id": 7,
     "title": "Testing, Testing",
@@ -226,7 +226,7 @@ URL= /jobs/?owner_id={valid_owner_id}
     "type": "PT",
     "status": "AH"
   },
-	{
+  {
     "id": 3,
     "owner_id": 7,
     "title": "Testing2, Testing2",
@@ -256,6 +256,30 @@ URL = /jobs/{id}/
 ### Job Details Update (put)
 
 URL = /jobs/{id}/?AUTH_TOKEN={valid_session_token}
+
+```json
+/* body (example) */
+{
+  "title": "Konche na edar, rogat dobitak",
+  "description": "Yes, boy",
+  "type": "FT",
+  "status": "PH"
+}
+
+/* successful response (example) */
+{
+  "id": 1,
+  "owner_id": 3,
+  "title": "Konche na edar, rogat dobitak",
+  "description": "Yes, boy",
+  "type": "FT",
+  "status": "PH"
+}
+```
+
+### Job Creation (post)
+
+URL = /jobs/?AUTH_TOKEN={valid_session_token}
 
 ```json
 /* body (example) */

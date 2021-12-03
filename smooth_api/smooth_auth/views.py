@@ -166,7 +166,7 @@ class ProfileDetails(GenericAPIView):
         is_business = user.is_business
 
         try:
-            if not is_business:
+            if is_business:
                 profile = BusinessProfile.objects.get(
                     pk=user_pk
                 )
@@ -181,7 +181,7 @@ class ProfileDetails(GenericAPIView):
                 self.serializer_class = ApplicantProfileSerializer
 
             data = dict(request.data)
-            if is_business:
+            if not is_business:
                 data['education'] = data['education'].split(';')
                 data['skills'] = data['skills'].split(';')
 

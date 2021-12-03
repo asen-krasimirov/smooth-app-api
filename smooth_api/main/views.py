@@ -150,6 +150,15 @@ class JobDetail(GeneralOps, RetrieveAPIView):
             }
         )
 
+    def delete(self, request, *args, **kwargs):
+        self.authenticate(request)
+        # print(kwargs.get('pk'), 'deleted')
+        job = Job.objects.get(pk=kwargs.get('pk'))
+        if job:
+            job.delete()
+            return Response({'message': 'Successfully deleted!'})
+        else:
+            raise ValidationError({'error_message': 'Job not found!'})
 
 # def test_view(request):
 #     return HttpResponse(request)

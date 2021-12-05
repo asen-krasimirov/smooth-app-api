@@ -53,7 +53,7 @@ class JobList(GeneralOps, ListAPIView):
         serialized_profiles = []
         if owner_pk:
             try:
-                queryset = Job.objects.filter(
+                jobs = Job.objects.filter(
                     owner=SmoothUser.objects.get(
                         pk=owner_pk
                     )
@@ -61,27 +61,26 @@ class JobList(GeneralOps, ListAPIView):
             except:
                 raise ValidationError({'error_message': 'User not found!'})
         else:
+            # jobs = Job.objects.all()
             jobs = Job.objects.all()
 
-            job_owner_ids = [
-                job.owner.pk
-                for job in jobs
-            ]
+        job_owner_ids = owner_pk if owner_pk else [
+            job.owner.pk
+            for job in jobs
+        ]
 
-            owner_profiles = BusinessProfile.objects.filter(
-                pk__in=job_owner_ids
-            )
+        owner_profiles = BusinessProfile.objects.filter(
+            pk__in=job_owner_ids
+        )
 
-            serialized_profiles = BusinessProfileSerializer(owner_profiles, many=True)
+        serialized_profiles = BusinessProfileSerializer(owner_profiles, many=True)
 
-            queryset = Job.objects.all()
-
-        page = self.paginate_queryset(queryset)
+        page = self.paginate_queryset(jobs)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        serializer = self.get_serializer(queryset, many=True)
+        serializer = self.get_serializer(jobs, many=True)
         return Response({
             'jobs': serializer.data,
             'profiles': serialized_profiles.data

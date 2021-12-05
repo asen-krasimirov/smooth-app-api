@@ -149,10 +149,10 @@ class JobDetail(GeneralOps, RetrieveAPIView):
         )
 
     def delete(self, request, *args, **kwargs):
-        self.authenticate(request)
-        # print(kwargs.get('pk'), 'deleted')
+        owner = self.authenticate(request)
         job = Job.objects.get(pk=kwargs.get('pk'))
-        if job:
+
+        if job and job.owner.pk == owner.pk:
             job.delete()
             return Response({'message': 'Successfully deleted!'})
         else:
@@ -187,15 +187,14 @@ class AppliedJobs(GeneralOps, ListAPIView):
     def get(self, request, *args, **kwargs):
         user_pk = request.query_params.get('user_id')
         # serialized_profiles = []
-        if user_pk:
-            try:
-                jobs = AppliedJob.objects.filter(
-                    user=SmoothUser.objects.get(
-                        pk=user_pk
-                    )
+        try:
+            jobs = AppliedJob.objects.filter(
+                user=SmoothUser.objects.get(
+                    pk=user_pk
                 )
-            except:
-                raise ValidationError({'error_message': 'User not found!'})
+            )
+        except:
+            raise ValidationError({'error_message': 'User not found!'})
 
         owner_profile = ApplicantProfile.objects.get(pk=user_pk)
 
@@ -223,3 +222,36 @@ class AppliedJobs(GeneralOps, ListAPIView):
         return Response(
             AppliedJobSerializer(applied_job, context=self.get_serializer_context()).data
         )
+
+
+class AppliedJobDetail(GeneralOps, RetrieveAPIView):
+    queryset = AppliedJob.objects.all()
+    serializer_class = AppliedJobSerializer
+
+    def get(self, request, *args, **kwargs):
+        applied_job = AppliedJob.objects.get(
+            pk=kwargs['pk']
+        )
+
+        owner_profile = ApplicantProfile.objects.get(
+            pk=applied_job.user.pk
+        )
+
+        serialized_profile = ApplicantProfileSerializer(owner_profile)
+
+        serializer = self.get_serializer(applied_job)
+
+        return Response({
+            'job': serializer.data,
+            'profile': serialized_profile.data
+        })
+
+    def delete(self, request, *args, **kwargs):
+        user = self.authenticate(request)
+        applied_job = AppliedJob.objects.get(pk=kwargs.get('pk'))
+
+        if applied_job and applied_job.user.pk == user.pk:
+            applied_job.delete()
+            return Response({'message': 'Successfully unapplied!'})
+        else:
+            raise ValidationError({'error_message': 'Have not applied to this job!'})

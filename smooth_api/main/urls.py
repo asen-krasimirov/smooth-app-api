@@ -7,4 +7,5 @@ urlpatterns = [
     path('<int:pk>/', views.JobDetail.as_view()),
     # path('test/', views.test_view),
     path('applied/', views.AppliedJobs.as_view()),
+    path('applied/<int:pk>', views.AppliedJobDetail.as_view()),
 ]

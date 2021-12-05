@@ -5,10 +5,10 @@ from rest_framework import exceptions
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
-from smooth_api.main.models import Job
-from smooth_api.main.serializers import JobSerializer
-from smooth_api.smooth_auth.models import SmoothSession, SmoothUser, BusinessProfile
-from smooth_api.smooth_auth.serializers import BusinessProfileSerializer
+from smooth_api.main.models import Job, AppliedJob
+from smooth_api.main.serializers import JobSerializer, AppliedJobSerializer
+from smooth_api.smooth_auth.models import SmoothSession, SmoothUser, BusinessProfile, ApplicantProfile
+from smooth_api.smooth_auth.serializers import BusinessProfileSerializer, ApplicantProfileSerializer
 
 UserModel = get_user_model()
 
@@ -50,7 +50,7 @@ class JobList(GeneralOps, ListAPIView):
 
     def get(self, request, *args, **kwargs):
         owner_pk = request.query_params.get('owner_id')
-        serialized_profiles = []
+        # serialized_profiles = []
         if owner_pk:
             try:
                 jobs = Job.objects.filter(
@@ -107,7 +107,6 @@ class JobDetail(GeneralOps, RetrieveAPIView):
     serializer_class = JobSerializer
 
     def get(self, request, *args, **kwargs):
-
         job = Job.objects.get(
             pk=kwargs['pk']
         )
@@ -161,3 +160,66 @@ class JobDetail(GeneralOps, RetrieveAPIView):
 
 # def test_view(request):
 #     return HttpResponse(request)
+
+
+class AppliedJobs(GeneralOps, ListAPIView):
+    queryset = AppliedJob.objects.all()
+    serializer_class = AppliedJobSerializer
+
+    def get_and_escape_data(self, request):
+        user = self.authenticate(request)
+
+        try:
+            job_pk = html.escape(request.data['job_id'])
+            job = Job.objects.get(pk=job_pk)
+
+            if AppliedJob.objects.filter(user=user, job=job).first():
+                raise Exception('Job already applied to!')
+
+        except Exception as error:
+            raise ValidationError({'error_message': error})
+
+        return {
+            'job': job,
+            'user': user,
+        }
+
+    def get(self, request, *args, **kwargs):
+        user_pk = request.query_params.get('user_id')
+        # serialized_profiles = []
+        if user_pk:
+            try:
+                jobs = AppliedJob.objects.filter(
+                    user=SmoothUser.objects.get(
+                        pk=user_pk
+                    )
+                )
+            except:
+                raise ValidationError({'error_message': 'User not found!'})
+
+        owner_profile = ApplicantProfile.objects.get(pk=user_pk)
+
+        serialized_profile = ApplicantProfileSerializer(owner_profile)
+
+        page = self.paginate_queryset(jobs)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(jobs, many=True)
+        return Response({
+            'jobs': serializer.data,
+            'profile': serialized_profile.data
+        })
+
+    def post(self, request):
+        escaped_data = self.get_and_escape_data(request)
+
+        applied_job = AppliedJob.objects.create(
+            job=escaped_data['job'],
+            user=escaped_data['user'],
+        )
+
+        return Response(
+            AppliedJobSerializer(applied_job, context=self.get_serializer_context()).data
+        )

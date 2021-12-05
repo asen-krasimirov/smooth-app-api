@@ -37,3 +37,15 @@ class Job(models.Model):
         max_length=2,
         choices=HIRING_STATUS_CHOICES,
     )
+
+
+class AppliedJob(models.Model):
+    job = models.ForeignKey(
+        Job,
+        on_delete=models.CASCADE
+    )
+
+    user = models.ForeignKey(
+        UserModel,
+        on_delete=models.CASCADE,
+    )

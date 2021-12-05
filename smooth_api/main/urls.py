@@ -6,4 +6,5 @@ urlpatterns = [
     path('', views.JobList.as_view()),
     path('<int:pk>/', views.JobDetail.as_view()),
     # path('test/', views.test_view),
+    path('applied/', views.AppliedJobs.as_view()),
 ]

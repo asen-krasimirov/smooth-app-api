@@ -407,6 +407,32 @@ URL = /jobs/applied/{applied_job_id}
 
 ***Response is the same as Applied Jobs List but with only one job info***
 
+### Apply Job (post)
+
+URL = /jobs/applied/?AUTH_TOKEN={valid_owner_session_token}
+
+<b>Body (example)</b>
+
+```json
+{
+  "job_id": "9"
+}
+```
+
+<b>Successful Response (example)</b>
+
+```json
+{
+  "id": 5,
+  "job_id": 9,
+  "user_id": 15,
+  "title": "2",
+  "description": "2d",
+  "type": "PT",
+  "status": "PH"
+}
+```
+
 ### Unapply Job (delete)
 
 URL = /jobs/applied/{applied_job_id}?AUTH_TOKEN={valid_owner_session_token}

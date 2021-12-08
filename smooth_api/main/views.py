@@ -229,9 +229,13 @@ class AppliedJobDetail(GeneralOps, RetrieveAPIView):
     serializer_class = AppliedJobSerializer
 
     def get(self, request, *args, **kwargs):
-        applied_job = AppliedJob.objects.get(
+        job = Job.objects.get(
             pk=kwargs['pk']
         )
+
+        applied_job = AppliedJob.objects.filter(
+            job=job
+        ).first()
 
         owner_profile = ApplicantProfile.objects.get(
             pk=applied_job.user.pk

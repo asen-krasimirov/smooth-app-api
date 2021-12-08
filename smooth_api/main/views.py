@@ -161,6 +161,35 @@ class JobDetail(GeneralOps, RetrieveAPIView):
 #     return HttpResponse(request)
 
 
+class ApplicantsList(GeneralOps, ListAPIView):
+    queryset = ApplicantProfile.objects.all()
+    serializer_class = ApplicantProfileSerializer
+
+    # queryset = AppliedJob.objects.all()
+    # serializer_class = AppliedJobSerializer
+
+    def get(self, request, *args, **kwargs):
+        job_pk = kwargs.get('pk')
+
+        job = Job.objects.get(
+            pk=job_pk
+        )
+
+        applied_jobs = AppliedJob.objects.filter(
+            job=job
+        )
+
+        user_ids = [applied_job.user_id for applied_job in applied_jobs]
+
+        applicants = ApplicantProfile.objects.filter(pk__in=user_ids)
+
+        serializer = self.get_serializer(applicants, many=True)
+
+        return Response({
+            'applicants': serializer.data
+        })
+
+
 class AppliedJobs(GeneralOps, ListAPIView):
     queryset = AppliedJob.objects.all()
     serializer_class = AppliedJobSerializer
@@ -171,8 +200,8 @@ class AppliedJobs(GeneralOps, ListAPIView):
         try:
             job_pk = html.escape(request.data['job_id'])
             job = Job.objects.get(pk=job_pk)
-
-            if AppliedJob.objects.filter(user=user, job=job).first():
+            applied_job = AppliedJob.objects.filter(user=user, job=job).first()
+            if applied_job:
                 raise Exception('Job already applied to!')
 
         except Exception as error:
@@ -232,7 +261,10 @@ class AppliedJobDetail(GeneralOps, RetrieveAPIView):
             pk=kwargs['pk']
         )
 
+        user = UserModel.objects.get(pk=request.query_params.get('user_id'))
+
         applied_job = AppliedJob.objects.filter(
+            user=user,
             job=job
         ).first()
 
@@ -254,7 +286,11 @@ class AppliedJobDetail(GeneralOps, RetrieveAPIView):
 
     def delete(self, request, *args, **kwargs):
         user = self.authenticate(request)
-        applied_job = AppliedJob.objects.get(pk=kwargs.get('pk'))
+        job = Job.objects.get(pk=kwargs.get('pk'))
+        applied_job = AppliedJob.objects.filter(
+            user=user,
+            job=job
+        ).first()
 
         if applied_job and applied_job.user.pk == user.pk:
             applied_job.delete()

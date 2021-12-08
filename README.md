@@ -445,6 +445,34 @@ URL = /jobs/applied/{job_id}/?AUTH_TOKEN={valid_owner_session_token}
 }
 ```
 
+### Job Applicants (get)
+
+URL = /jobs/{valid_job_id}/applicants/
+
+<b>Successful Response (example)</b>
+
+```json
+{
+  "applicants": [
+    {
+      "id": 16,
+      "first_name": "Mr Goshko",
+      "last_name": "Goshev",
+      "about_info": "This is the most important intel on me- I am cool.",
+      "icon_image": "https://pyxis.nymag.com/v1/imgs/66c/700/bd13af1f94c1c174ed17c7a33b29d36bcc-GettyImages-1278090730.rsquare.w1200.jpg",
+      "background_image": "https://wallpaperaccess.com/full/6043682.jpg",
+      "skills": [
+        ""
+      ],
+      "education": [
+        "Harvard"
+      ],
+      "applicant_blog": "https://joebiden.com/presidency-for-all-americans/"
+    }
+  ]
+}
+```
+
 ## Administration
 
 URL = /admin/

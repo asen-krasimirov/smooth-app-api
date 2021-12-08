@@ -1,4 +1,5 @@
 import datetime
+from django.utils import timezone
 
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
@@ -209,8 +210,8 @@ class SmoothSession(models.Model):
     # )
 
     expiry_data = models.DateTimeField(
-        default=datetime.datetime.now()
+        default=timezone.now()
     )
 
     def has_expired(self):
-        return datetime.datetime.now(self.expiry_data.tzinfo) > self.expiry_data
+        return timezone.now() < self.expiry_data

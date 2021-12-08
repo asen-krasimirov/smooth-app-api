@@ -12,7 +12,6 @@ from smooth_api.smooth_auth.serializers import BusinessProfileSerializer, Applic
 
 UserModel = get_user_model()
 
-
 class GeneralOps:
     def get_and_escape_data(self, request):
         owner = self.authenticate(request)

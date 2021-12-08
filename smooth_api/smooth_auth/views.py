@@ -1,4 +1,6 @@
 import datetime
+from django.utils import timezone
+# import pytz
 
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets, status, exceptions
@@ -12,7 +14,6 @@ from smooth_api.smooth_auth.serializers import RegisterSerializer, LoginSerializ
 from smooth_api.smooth_auth.serializers import SmoothUserSerializer
 
 UserModel = get_user_model()
-
 
 # class SmoothUserViewSet(viewsets.ModelViewSet):
 #     queryset = UserModel.objects.all()
@@ -32,7 +33,7 @@ class UserDetail(RetrieveAPIView):
 def make_live_session(user):
     token = generate_token(64)
 
-    expiry_date = datetime.datetime.now() + datetime.timedelta(days=7)
+    expiry_date = timezone.now() + datetime.timedelta(days=7)
 
     SmoothSession.objects.create(
         user=user,

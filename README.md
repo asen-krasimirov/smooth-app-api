@@ -435,7 +435,7 @@ URL = /jobs/applied/?AUTH_TOKEN={valid_owner_session_token}
 
 ### Unapply Job (delete)
 
-URL = /jobs/applied/{applied_job_id}?AUTH_TOKEN={valid_owner_session_token}
+URL = /jobs/applied/{job_id}?AUTH_TOKEN={valid_owner_session_token}
 
 <b>Successful Response</b>
 

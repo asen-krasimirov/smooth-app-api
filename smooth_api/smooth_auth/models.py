@@ -214,4 +214,4 @@ class SmoothSession(models.Model):
     )
 
     def has_expired(self):
-        return timezone.now() < self.expiry_data
+        return timezone.now() > self.expiry_data

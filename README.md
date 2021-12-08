@@ -401,7 +401,7 @@ URL = /jobs/applied/?user_id={valid_user_id}
 
 ### Applied Job Details (get)
 
-URL = /jobs/applied/{applied_job_id}
+URL = /jobs/applied/{job_id}
 
 <b>Successful Response</b>
 

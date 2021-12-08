@@ -236,6 +236,9 @@ class AppliedJobDetail(GeneralOps, RetrieveAPIView):
             job=job
         ).first()
 
+        if not applied_job:
+            return Response({'message': 'Not found.'})
+
         owner_profile = ApplicantProfile.objects.get(
             pk=applied_job.user.pk
         )

@@ -48,6 +48,8 @@ def is_logged(user):
     session = SmoothSession.objects.filter(user=user).first()
     if session and not session.has_expired():
         return session.token
+    else:
+        session.delete()
 
 
 class RegisterView(GenericAPIView):

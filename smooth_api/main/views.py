@@ -5,6 +5,7 @@ from rest_framework import exceptions
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
+from smooth_api.core.paginators import StandardResultsSetPagination
 from smooth_api.main.models import Job, AppliedJob
 from smooth_api.main.serializers import JobSerializer, AppliedJobSerializer
 from smooth_api.smooth_auth.models import SmoothSession, SmoothUser, BusinessProfile, ApplicantProfile
@@ -46,6 +47,7 @@ class GeneralOps:
 class JobList(GeneralOps, ListAPIView):
     queryset = Job.objects.all()
     serializer_class = JobSerializer
+    pagination_class = StandardResultsSetPagination
 
     def get(self, request, *args, **kwargs):
         owner_pk = request.query_params.get('owner_id')
@@ -63,7 +65,7 @@ class JobList(GeneralOps, ListAPIView):
             # jobs = Job.objects.all()
             jobs = Job.objects.all()
 
-        job_owner_ids = owner_pk if owner_pk else [
+        job_owner_ids = [owner_pk] if owner_pk else [
             job.owner.pk
             for job in jobs
         ]
@@ -77,7 +79,11 @@ class JobList(GeneralOps, ListAPIView):
         page = self.paginate_queryset(jobs)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
+            # return self.get_paginated_response(serializer.data)
+            return self.get_paginated_response({
+                'jobs': serializer.data,
+                'profiles': serialized_profiles.data
+            })
 
         serializer = self.get_serializer(jobs, many=True)
         return Response({

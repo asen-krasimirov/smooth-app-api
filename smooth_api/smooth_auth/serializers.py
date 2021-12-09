@@ -132,7 +132,7 @@ class ApplicantProfileSerializer(serializers.ModelSerializer):
         education = validated_data['education']
         applicant_blog = validated_data['applicant_blog']
         phone_number = validated_data['phone_number']
-        preferred_job = validated_data['preferred_job']
+        preferred_position = validated_data['preferred_position']
 
         instance.first_name = first_name
         instance.last_name = last_name
@@ -143,7 +143,7 @@ class ApplicantProfileSerializer(serializers.ModelSerializer):
         instance.education = education
         instance.applicant_blog = applicant_blog
         instance.phone_number = phone_number
-        instance.preferred_job = preferred_job
+        instance.preferred_position = preferred_position
 
         instance.save()
         return instance

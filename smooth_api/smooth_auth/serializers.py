@@ -116,6 +116,8 @@ class ApplicantProfileSerializer(serializers.ModelSerializer):
             'skills',
             'education',
             'applicant_blog',
+            'phone_number',
+            'preferred_position',
             # 'is_complete'
         ]
 

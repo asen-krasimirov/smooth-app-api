@@ -177,6 +177,16 @@ class ApplicantProfile(models.Model):
         blank=True,
     )
 
+    phone_number = models.CharField(
+        max_length=30,
+        blank=True,
+    )
+
+    preferred_position = models.CharField(
+        max_length=50,
+        blank=True,
+    )
+
     user = models.OneToOneField(
         SmoothUser,
         on_delete=models.CASCADE,

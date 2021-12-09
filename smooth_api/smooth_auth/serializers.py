@@ -103,11 +103,13 @@ class BusinessProfileSerializer(serializers.ModelSerializer):
 
 class ApplicantProfileSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField(source='user.pk')
+    email = serializers.ReadOnlyField(source='user.email')
 
     class Meta:
         model = ApplicantProfile
         fields = [
             'id',
+            'email',
             'first_name',
             'last_name',
             'about_info',

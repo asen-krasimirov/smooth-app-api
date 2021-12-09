@@ -185,7 +185,6 @@ class ApplicantProfile(models.Model):
     preferred_position = models.CharField(
         max_length=50,
         blank=True,
-        default="Not Selected",
     )
 
     user = models.OneToOneField(

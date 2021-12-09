@@ -83,6 +83,8 @@ class JobList(GeneralOps, ListAPIView):
             # jobs = Job.objects.all()
             jobs = Job.objects.all()
 
+        jobs = jobs[::-1]
+
         job_owner_ids = [owner_pk] if owner_pk else [
             job.owner.pk
             for job in jobs

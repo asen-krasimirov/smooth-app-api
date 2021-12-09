@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib.auth import get_user_model
 from django.db import models
 
@@ -36,6 +38,10 @@ class Job(models.Model):
     status = models.CharField(
         max_length=2,
         choices=HIRING_STATUS_CHOICES,
+    )
+
+    posted_date = models.DateField(
+        default=datetime.now()
     )
 
 

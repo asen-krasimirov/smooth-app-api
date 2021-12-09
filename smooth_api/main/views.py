@@ -13,6 +13,7 @@ from smooth_api.smooth_auth.serializers import BusinessProfileSerializer, Applic
 
 UserModel = get_user_model()
 
+
 class GeneralOps:
     def get_and_escape_data(self, request):
         owner = self.authenticate(request)
@@ -45,13 +46,24 @@ class GeneralOps:
 
 
 class JobList(GeneralOps, ListAPIView):
-    queryset = Job.objects.all()
+    # queryset = Job.objects.all()
     serializer_class = JobSerializer
     pagination_class = StandardResultsSetPagination
 
+    # def get_queryset(self):
+    #     job_search_title = self.kwargs.get('job_title')
+    #
+    #     if job_search_title:
+    #         return Job.objects.filter(
+    #             title__contains=job_search_title
+    #         )
+    #
+    #     return Job.objects.all()
+
     def get(self, request, *args, **kwargs):
         owner_pk = request.query_params.get('owner_id')
-        # serialized_profiles = []
+        job_search_title = request.query_params.get('job_title')
+
         if owner_pk:
             try:
                 jobs = Job.objects.filter(
@@ -61,6 +73,12 @@ class JobList(GeneralOps, ListAPIView):
                 )
             except:
                 raise ValidationError({'error_message': 'User not found!'})
+
+        elif job_search_title:
+            jobs = Job.objects.filter(
+                title__icontains=job_search_title
+            )
+
         else:
             # jobs = Job.objects.all()
             jobs = Job.objects.all()
@@ -162,6 +180,7 @@ class JobDetail(GeneralOps, RetrieveAPIView):
             return Response({'message': 'Successfully deleted!'})
         else:
             raise ValidationError({'error_message': 'Job not found!'})
+
 
 # def test_view(request):
 #     return HttpResponse(request)

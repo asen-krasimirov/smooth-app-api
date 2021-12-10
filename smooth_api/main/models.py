@@ -40,7 +40,7 @@ class Job(models.Model):
         choices=HIRING_STATUS_CHOICES,
     )
 
-    posted_date = models.DateField(
+    posted_date = models.DateTimeField(
         default=datetime.now()
     )
 

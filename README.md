@@ -2,6 +2,9 @@
 
 This is the back-end part of the Smooth App.
 
+### Deployed to:
+The application is deployed on Heroku here- https://smooth-app-api.herokuapp.com/
+
 ## Authentication ( /auth )
 
 ### Registration (post)

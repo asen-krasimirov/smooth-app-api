@@ -110,9 +110,9 @@ class BusinessProfile(models.Model):
         primary_key=True,
     )
 
-    # is_complete = models.BooleanField(
-    #     default=False,
-    # )
+    is_complete = models.BooleanField(
+        default=False,
+    )
 
     def __str__(self):
         return f'Profile of {self.user.email}'
@@ -193,9 +193,9 @@ class ApplicantProfile(models.Model):
         primary_key=True,
     )
 
-    # is_complete = models.BooleanField(
-    #     default=False,
-    # )
+    is_complete = models.BooleanField(
+        default=False,
+    )
 
     def __str__(self):
         return f'Profile of {self.user.email}'

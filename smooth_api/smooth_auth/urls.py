@@ -14,4 +14,5 @@ urlpatterns = [
     path('logout/', views.LogoutView.as_view(), name='logout'),
 
     path('profile-details/<int:user_id>/', views.ProfileDetails.as_view()),
+    path('profile-details/<int:user_id>/is_complete/', views.IsProfileComplete.as_view()),
 ]

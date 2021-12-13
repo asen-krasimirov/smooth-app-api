@@ -3,7 +3,7 @@ from django.utils import timezone
 # import pytz
 
 from django.contrib.auth import get_user_model
-from rest_framework import viewsets, status, exceptions
+from rest_framework import status, exceptions
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import ListAPIView, RetrieveAPIView, GenericAPIView
 from rest_framework.response import Response
@@ -200,3 +200,32 @@ class ProfileDetails(GenericAPIView):
             raise ValidationError(e.args[0])
 
         return Response(profile[0])
+
+
+class IsProfileComplete(GenericAPIView):
+    def get(self, request, *args, **kwargs):
+        user_pk = kwargs.get('user_id')
+        try:
+            user = SmoothUser.objects.filter(
+                pk=user_pk
+            ).first()
+
+            if not user:
+                raise ValidationError({'error_message': 'User not found!'})
+
+            if user.is_business:
+                is_complete = BusinessProfile.objects.get(
+                    pk=user_pk
+                ).is_complete
+
+            else:
+                is_complete = ApplicantProfile.objects.get(
+                    pk=user_pk
+                ).is_complete
+
+        except Exception as e:
+            raise ValidationError({'error_message': e})
+
+        return Response({
+            'is_complete': is_complete
+        })

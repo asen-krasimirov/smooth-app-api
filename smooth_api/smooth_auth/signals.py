@@ -13,3 +13,36 @@ def create_user_profile(sender, instance, created, **kwargs):
             BusinessProfile.objects.create(user=instance)
         else:
             ApplicantProfile.objects.create(user=instance)
+
+
+@receiver(post_save, sender=BusinessProfile)
+def check_if_business_profile_is_complete(sender, instance, created, **kwargs):
+    if instance.is_complete:
+        return
+
+    fields = [
+        instance.name == '',
+        instance.about_info == '',
+        instance.icon_image == ''
+    ]
+
+    if not any(fields):
+        instance.is_complete = True
+        instance.save()
+
+
+@receiver(post_save, sender=ApplicantProfile)
+def check_if_applicant_profile_is_complete(sender, instance, created, **kwargs):
+    if instance.is_complete:
+        return
+
+    fields = [
+        instance.first_name == '',
+        instance.last_name == '',
+        instance.about_info == '',
+        instance.icon_image == '',
+    ]
+
+    if not any(fields):
+        instance.is_complete = True
+        instance.save()
